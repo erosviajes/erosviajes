@@ -398,6 +398,22 @@
       .packages-grid { grid-template-columns:1fr; }
       .hero-stats { gap:.8rem; }
       nav { padding:.4rem 1rem; }
+      .hero-stats {
+    gap: .5rem;            /* Menos espacio entre cuadros */
+    bottom: 1rem;          /* Los subimos un poco del fondo */
+    left: 1rem;
+    right: 1rem;
+  }
+  .stat {
+    padding: .4rem .6rem;  /* Cuadros más compactos */
+    border-radius: 10px;
+  }
+  .stat strong {
+    font-size: .95rem;     /* Números más pequeños */
+  }
+  .stat span {
+    font-size: .6rem;      /* Texto más pequeño */
+  }
     }
   </style>
 </head>
@@ -837,6 +853,7 @@ function handleSubmit(e) {
 </body>
 
 </html>
+
 
 
 

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eros Viajes y Turismo, C.A.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:    #C82200;
+      --red-lt: #E8340A;
+      --gold:   #F0A500;
+      --gold-lt:#FFD166;
+      --blue:   #1A5BA6;
+      --blue-lt:#2979C8;
+      --dark:   #1A1A1A;
+      --mid:    #666;
+      --light:  #F6F3EF;
+      --white:  #FFFFFF;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--white); color:var(--dark); overflow-x:hidden; }
+
+    /* ══ NAVBAR ══ */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:999;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.4rem 3rem;
+      background:rgba(255,255,255,0.97);
+      backdrop-filter:blur(14px);
+      border-bottom:3px solid var(--gold);
+      box-shadow:0 2px 18px rgba(0,0,0,0.09);
+    }
+    .nav-logo img {
+      height:70px;
+      object-fit:contain;
+      mix-blend-mode:multiply;
+      display:block;
+    }
+    .nav-links { display:flex; gap:1.5rem; list-style:none; }
+    .nav-links a {
+      color:var(--dark); text-decoration:none;
+      font-size:0.82rem; font-weight:600;
+      letter-spacing:0.05em; text-transform:uppercase;
+      transition:color .25s; position:relative; padding-bottom:3px;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; left:0; bottom:0;
+      width:0; height:2px; background:var(--red); transition:width .3s;
+    }
+    .nav-links a:hover { color:var(--red); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-cta {
+      background:var(--red); color:var(--white); border:none;
+      padding:0.58rem 1.4rem; border-radius:50px;
+      font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.82rem;
+      cursor:pointer; transition:background .25s,transform .2s; white-space:nowrap;
+    }
+    .nav-cta:hover { background:var(--red-lt); transform:scale(1.04); }
+
+    /* ══ HERO ══ */
+    #inicio {
+      min-height:100vh; position:relative;
+      display:flex; align-items:center;
+      overflow:hidden; padding-top:80px;
+    }
+    .hero-bg {
+      position:absolute; inset:0;
+      background:url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1800&q=85') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(
+        110deg,
+        rgba(18,18,18,.82) 0%,
+        rgba(26,91,166,.52) 52%,
+        rgba(200,34,0,.30) 100%
+      );
+    }
+    .hero-content {
+      position:relative; z-index:2;
+      max-width:700px;
+      padding:3rem 3rem 3rem 5vw;
+      animation:fadeUp 1s ease both;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:var(--gold); color:var(--dark);
+      font-size:0.74rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      padding:0.38rem 1.1rem; border-radius:50px;
+      margin-bottom:1.4rem;
+    }
+    .hero-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.8rem,5.8vw,4.6rem);
+      font-weight:900; color:var(--white);
+      line-height:1.08; margin-bottom:.9rem;
+    }
+    .hero-title em { font-style:italic; color:var(--gold); }
+    .hero-sub {
+      color:rgba(255,255,255,.76); font-size:1.02rem;
+      font-weight:300; line-height:1.78; margin-bottom:2.2rem;
+    }
+    .hero-buttons { display:flex; gap:1rem; flex-wrap:wrap; }
+    .btn-primary {
+      background:var(--red); color:var(--white);
+      padding:.85rem 2rem; border-radius:50px;
+      text-decoration:none; font-weight:600; font-size:.95rem;
+      transition:background .25s,transform .25s,box-shadow .25s;
+      box-shadow:0 8px 25px rgba(200,34,0,.35);
+    }
+    .btn-primary:hover { background:var(--red-lt); transform:translateY(-3px); box-shadow:0 14px 35px rgba(200,34,0,.45); }
+    .btn-secondary {
+      background:transparent; color:var(--white);
+      border:2px solid rgba(255,255,255,.5);
+      padding:.85rem 2rem; border-radius:50px;
+      text-decoration:none; font-weight:600; font-size:.95rem;
+      transition:border-color .25s,background .25s;
+    }
+    .btn-secondary:hover { border-color:var(--gold); background:rgba(240,165,0,.12); }
+
+    .hero-stats {
+      position:absolute; bottom:2.5rem; left:5vw; right:5vw;
+      z-index:2; display:flex; gap:1.2rem; flex-wrap:wrap;
+    }
+    .stat {
+      background:rgba(255,255,255,.1); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.2); border-radius:14px;
+      padding:.7rem 1.4rem; text-align:center;
+    }
+    .stat strong { display:block; font-size:1.4rem; font-weight:700; color:var(--gold); }
+    .stat span { font-size:.74rem; color:rgba(255,255,255,.7); letter-spacing:.04em; }
+
+    /* ══ SECCIONES COMUNES ══ */
+    section { padding:5.5rem 2rem; }
+    .container { max-width:1180px; margin:0 auto; }
+    .section-tag {
+      display:inline-block; font-size:.72rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase;
+      padding:.3rem .9rem; border-radius:50px; margin-bottom:.8rem;
+    }
+    .tag-red   { background:rgba(200,34,0,.1);   color:var(--red);  }
+    .tag-blue  { background:rgba(26,91,166,.1);  color:var(--blue); }
+    .tag-gold  { background:rgba(240,165,0,.14); color:#8A6000;     }
+    .tag-green { background:rgba(26,140,70,.1);  color:#1A7A40;     }
+    .section-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.9rem,3.5vw,2.8rem);
+      font-weight:900; line-height:1.15;
+      color:var(--dark); margin-bottom:.7rem;
+    }
+    .section-title span { color:var(--red); }
+    .section-sub { color:var(--mid); font-size:.97rem; line-height:1.75; max-width:520px; }
+
+    /* ══ LAYOUT SERVICIO ══ */
+    .service-layout {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:3.5rem; align-items:center;
+    }
+    .service-layout.reverse { direction:rtl; }
+    .service-layout.reverse > * { direction:ltr; }
+    .service-photo-wrap {
+      border-radius:24px; overflow:hidden;
+      box-shadow:0 20px 55px rgba(0,0,0,.13);
+      position:relative; aspect-ratio:4/3;
+    }
+    .service-photo-wrap img {
+      width:100%; height:100%; object-fit:cover;
+      display:block; transition:transform .5s;
+    }
+    .service-photo-wrap:hover img { transform:scale(1.06); }
+    .photo-badge {
+      position:absolute; bottom:1rem; left:1rem;
+      background:var(--white); border-radius:12px;
+      padding:.5rem 1rem; display:flex; align-items:center; gap:.5rem;
+      font-size:.82rem; font-weight:600;
+      box-shadow:0 4px 18px rgba(0,0,0,.14);
+    }
+    .photo-badge .dot {
+      width:8px; height:8px; border-radius:50%;
+      background:#22C55E; animation:pulse 2s infinite;
+    }
+    .sub-cards { display:flex; flex-direction:column; gap:.9rem; margin-top:1.8rem; }
+    .sub-card {
+      display:flex; gap:1rem; align-items:flex-start;
+      background:var(--light); border-radius:14px;
+      padding:1rem 1.2rem; border-left:4px solid transparent;
+      transition:border-color .25s,box-shadow .25s,transform .25s;
+    }
+    .sub-card:hover { border-left-color:var(--red); box-shadow:0 6px 20px rgba(0,0,0,.07); transform:translateX(4px); }
+    .sub-icon {
+      width:42px; height:42px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.2rem; flex-shrink:0;
+    }
+    .bg-red   { background:rgba(200,34,0,.12);  }
+    .bg-blue  { background:rgba(26,91,166,.12); }
+    .bg-gold  { background:rgba(240,165,0,.14); }
+    .bg-green { background:rgba(26,140,70,.12); }
+    .sub-card h4 { font-size:.93rem; font-weight:600; margin-bottom:.2rem; }
+    .sub-card p  { font-size:.83rem; color:var(--mid); line-height:1.55; }
+
+    #boletos   { background:var(--white); }
+    #estadias  { background:var(--light); }
+    #traslados { background:var(--white); }
+
+    /* ══ PAQUETES ══ */
+    #paquetes {
+      background:linear-gradient(155deg,#18181E 0%,#1A1A2E 100%);
+      position:relative; overflow:hidden;
+    }
+    #paquetes::before {
+      content:''; position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse at 15% 65%,rgba(200,34,0,.14),transparent 50%),
+        radial-gradient(ellipse at 85% 25%,rgba(26,91,166,.18),transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(240,165,0,.07),transparent 45%);
+    }
+    #paquetes .section-title { color:var(--white); }
+    #paquetes .section-sub   { color:rgba(255,255,255,.58); }
+
+    .packages-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(265px,1fr));
+      gap:1.4rem; margin-top:2.8rem;
+    }
+    .package-card {
+      border-radius:22px; overflow:hidden;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);
+      transition:transform .3s,box-shadow .3s;
+    }
+    .package-card:hover { transform:translateY(-8px); box-shadow:0 28px 55px rgba(0,0,0,.45); }
+    .pkg-img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+    .pkg-body { padding:1.4rem; }
+    .pkg-label { font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.35rem; }
+    .pkg-title { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:900; color:var(--white); margin-bottom:.75rem; }
+    .pkg-features { list-style:none; margin-bottom:1.2rem; }
+    .pkg-features li {
+      font-size:.84rem; color:rgba(255,255,255,.62);
+      padding:.28rem 0; display:flex; align-items:center; gap:.5rem;
+    }
+    .pkg-features li::before { content:'✓'; color:var(--gold); font-weight:700; flex-shrink:0; }
+    .pkg-btn {
+      display:block; text-align:center; padding:.72rem; border-radius:10px;
+      background:var(--red); color:var(--white); text-decoration:none;
+      font-weight:600; font-size:.87rem; transition:background .25s;
+    }
+    .pkg-btn:hover { background:var(--red-lt); }
+
+    /* ══ ALIADOS + RIF ══ */
+    .aliados-strip {
+      background:var(--light);
+      border-top:1px solid rgba(0,0,0,.07);
+      border-bottom:1px solid rgba(0,0,0,.07);
+      padding:1.6rem 2rem; text-align:center;
+    }
+    .aliados-strip .inner {
+      max-width:900px; margin:0 auto;
+      display:flex; flex-direction:column; align-items:center; gap:.75rem;
+    }
+    .aliados-label { font-size:.7rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--mid); }
+    .strip-pills { display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center; }
+    .aliado-pill {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:var(--white); border:1.5px solid rgba(26,91,166,.2);
+      border-radius:50px; padding:.42rem 1.2rem;
+      font-size:.85rem; font-weight:600; color:var(--dark);
+      box-shadow:0 2px 8px rgba(0,0,0,.05);
+    }
+    .aliado-pill span { color:var(--blue); }
+    .rif-text { font-size:.78rem; color:var(--mid); }
+    .rif-text strong { color:var(--dark); }
+
+    /* ══ CONTACTO ══ */
+    #contacto { background:var(--white); }
+    .contact-grid {
+      display:grid; grid-template-columns:1fr 1.25fr;
+      gap:4rem; align-items:start;
+    }
+    .contact-info-cards { display:flex; flex-direction:column; gap:.9rem; margin-top:1.8rem; }
+    .c-card {
+      display:flex; gap:1rem; align-items:center;
+      background:var(--light); border-radius:14px; padding:.95rem 1.2rem;
+    }
+    .c-icon {
+      width:44px; height:44px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.2rem; flex-shrink:0;
+    }
+    .c-icon.red  { background:rgba(200,34,0,.12);  }
+    .c-icon.blue { background:rgba(26,91,166,.12); }
+    .c-icon.gold { background:rgba(240,165,0,.14); }
+    .c-card p    { font-size:.73rem; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); margin-bottom:.1rem; }
+    .c-card strong { font-size:.93rem; color:var(--dark); }
+    .c-card a    { color:var(--blue); text-decoration:none; font-size:.93rem; font-weight:600; }
+    .c-card a:hover { text-decoration:underline; }
+
+    .contact-form { display:flex; flex-direction:column; gap:1rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-group { display:flex; flex-direction:column; gap:.32rem; }
+    .form-group label { font-size:.73rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background:var(--light); border:1.5px solid rgba(0,0,0,.08);
+      border-radius:12px; padding:.82rem 1rem;
+      color:var(--dark); font-family:'DM Sans',sans-serif;
+      font-size:.94rem; outline:none;
+      transition:border-color .25s,box-shadow .25s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(26,91,166,.1); }
+    .form-group select option { background:var(--white); }
+    .form-group textarea { resize:vertical; min-height:110px; }
+    .form-submit {
+      background:var(--red); color:var(--white); border:none;
+      padding:1rem; border-radius:12px;
+      font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600;
+      cursor:pointer; transition:background .25s,transform .2s,box-shadow .25s;
+      box-shadow:0 6px 20px rgba(200,34,0,.28);
+    }
+    .form-submit:hover { background:var(--red-lt); transform:translateY(-2px); box-shadow:0 10px 28px rgba(200,34,0,.38); }
+    .form-submit:disabled { opacity:0.7; cursor:not-allowed; transform:none; }
+
+    /* ══ FOOTER ══ */
+    footer {
+      background:var(--dark); color:rgba(255,255,255,.48);
+      padding:2.5rem 2rem 1.5rem; text-align:center;
+    }
+    .footer-logo { margin-bottom:.6rem; }
+    .footer-logo img {
+      height:72px; mix-blend-mode:screen;
+      filter:brightness(1.15); object-fit:contain;
+    }
+    footer .slogan { font-style:italic; font-size:.95rem; color:rgba(255,255,255,.4); margin-bottom:.7rem; }
+    footer .footer-aliados { font-size:.8rem; color:rgba(255,255,255,.3); margin-bottom:.4rem; }
+    footer .footer-email a { color:rgba(255,255,255,.48); text-decoration:none; font-size:.82rem; }
+    footer .footer-email a:hover { color:var(--gold); }
+    footer .copy { font-size:.76rem; margin-top:.8rem; border-top:1px solid rgba(255,255,255,.08); padding-top:.8rem; }
+
+    /* ══ ANIMACIONES ══ */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.4; transform:scale(1.5); }
+    }
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ══ RESPONSIVE ══ */
+    @media(max-width:920px){
+      nav { padding:.4rem 1.2rem; }
+      .nav-links { display:none; }
+      .service-layout,.service-layout.reverse { grid-template-columns:1fr; direction:ltr; }
+      .contact-grid { grid-template-columns:1fr; gap:2rem; }
+      .form-row { grid-template-columns:1fr; }
+      .hero-content { padding:2rem 1.5rem; }
+    }
+    @media(max-width:600px){
+      section { padding:3.5rem 1rem; }
+      .packages-grid { grid-template-columns:1fr; }
+      .hero-stats { gap:.8rem; }
+      nav { padding:.4rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <a href="#inicio" class="nav-logo">
+    <img src="https://via.placeholder.com/150x70/FFFFFF/C82200?text=EROS+VIAJES" alt="Eros Viajes y Turismo, C.A." />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#boletos">Boletos</a></li>
+    <li><a href="#estadias">Estadías</a></li>
+    <li><a href="#traslados">Traslados</a></li>
+    <li><a href="#paquetes">Paquetes</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">✈ Cotizar ahora</button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ Agencia de Viajes Certificada</div>
+    <h1 class="hero-title">"Viajar es<br><em>disfrutar...</em>"</h1>
+    <p class="hero-sub">Tu agencia de confianza para boletos aéreos, estadías, traslados y paquetes turísticos a cualquier destino del mundo.</p>
+    <div class="hero-buttons">
+      <a href="#paquetes" class="btn-primary">🌍 Ver paquetes</a>
+      <a href="#contacto" class="btn-secondary">Contáctanos</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><strong>+50</strong><span>Destinos</span></div>
+    <div class="stat"><strong>100%</strong><span>Confianza</span></div>
+    <div class="stat"><strong>24/7</strong><span>Atención</span></div>
+    <div class="stat"><strong>+10</strong><span>Años de exp.</span></div>
+  </div>
+</section>
+
+<!-- ══ BOLETOS AÉREOS ══ -->
+<section id="boletos">
+  <div class="container">
+    <div class="service-layout reveal">
+      <div class="service-photo-wrap">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=900&q=80" alt="Avión en vuelo" loading="lazy"/>
+        <div class="photo-badge"><span class="dot"></span> Vuelos disponibles hoy</div>
+      </div>
+      <div>
+        <span class="section-tag tag-red">✈ Boletos Aéreos</span>
+        <h2 class="section-title">Vuela donde <span>quieras</span>,<br>cuando quieras</h2>
+        <p class="section-sub">Gestionamos tus boletos nacionales e internacionales con las mejores tarifas del mercado, para que solo pienses en disfrutar.</p>
+        <div class="sub-cards">
+          <div class="sub-card">
+            <div class="sub-icon bg-red">🏠</div>
+            <div><h4>Vuelos Nacionales</h4><p>Conexiones rápidas y económicas entre las principales ciudades. Salidas diarias con múltiples horarios disponibles.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-blue">🌐</div>
+            <div><h4>Vuelos Internacionales</h4><p>América, Europa, Asia y más. Las mejores tarifas en aerolíneas de primer nivel para tu destino soñado.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-gold">💺</div>
+            <div><h4>Economy, Business y 1ª Clase</h4><p>Todas las clases disponibles. Viaja con el confort que mereces según tu presupuesto y necesidades.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ESTADÍAS ══ -->
+<section id="estadias">
+  <div class="container">
+    <div class="service-layout reverse reveal">
+      <div class="service-photo-wrap">
+        <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=80" alt="Hotel de lujo con piscina" loading="lazy"/>
+        <div class="photo-badge"><span class="dot"></span> Mejores precios garantizados</div>
+      </div>
+      <div>
+        <span class="section-tag tag-blue">🏨 Estadías</span>
+        <h2 class="section-title">Tu hogar <span>lejos</span><br>de casa</h2>
+        <p class="section-sub">Reservamos hoteles, apartamentos y resorts en los mejores destinos con precios competitivos y atención personalizada.</p>
+        <div class="sub-cards">
+          <div class="sub-card">
+            <div class="sub-icon bg-blue">🏨</div>
+            <div><h4>Hoteles 1★ a 5★</h4><p>Desde opciones económicas hasta lujos de primer nivel. Cubrimos todos los presupuestos en ubicaciones privilegiadas.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-green">🌴</div>
+            <div><h4>Resorts Todo Incluido</h4><p>Relájate sin preocuparte por nada. Comida, bebida y actividades en un solo paquete, sin sorpresas adicionales.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-gold">🏡</div>
+            <div><h4>Apartamentos y Villas</h4><p>Ideal para familias o estadías largas. Espacios amplios y cómodos con todos los servicios del hogar.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRASLADOS ══ -->
+<section id="traslados">
+  <div class="container">
+    <div class="service-layout reveal">
+      <div class="service-photo-wrap">
+        <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=900&q=80" alt="Traslado en vehículo" loading="lazy"/>
+        <div class="photo-badge"><span class="dot"></span> Servicio 24 horas</div>
+      </div>
+      <div>
+        <span class="section-tag tag-gold">🚌 Traslados</span>
+        <h2 class="section-title">Llega siempre <span>a tiempo</span>,<br>sin preocupaciones</h2>
+        <p class="section-sub">Coordinamos todos tus traslados para que cada etapa de tu viaje sea fluida, segura y libre de imprevistos desde el primer momento.</p>
+        <div class="sub-cards">
+          <div class="sub-card">
+            <div class="sub-icon bg-red">🚖</div>
+            <div><h4>Aeropuerto ↔ Hotel</h4><p>Transfer puntual y confiable. Te esperamos en la llegada y te llevamos a tu alojamiento sin contratiempos.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-blue">🚌</div>
+            <div><h4>Traslados en Grupo</h4><p>Autobuses y vans privadas para grupos desde 8 personas. Perfectos para viajes corporativos o excursiones familiares.</p></div>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon bg-green">🗺️</div>
+            <div><h4>Tours y Excursiones</h4><p>Recorremos los mejores puntos turísticos con guías locales expertos y transporte cómodo y seguro incluido.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PAQUETES ══ -->
+<section id="paquetes">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="reveal">
+      <span class="section-tag" style="background:rgba(240,165,0,.15);color:var(--gold);">✦ Paquetes Turísticos</span>
+      <h2 class="section-title">Todo listo para tu<br>próxima aventura</h2>
+      <p class="section-sub">Nuestros paquetes combinan vuelo, posada y traslados en una sola oferta irresistible. Tú solo preocúpate por disfrutar el viaje.</p>
+    </div>
+    <div class="packages-grid">
+
+      <!-- LOS ROQUES -->
+      <div class="package-card reveal">
+        <img class="pkg-img"
+          src="https://z-cdn-media.chatglm.cn/files/dbb4f5b5-cf7a-4645-b440-48fc069d30a7.jpg?auth_key=1872296027-7c3853f67f7a47a987072a9f9384e9e1-0-9f842bf8f8f9305936a05a816479c035"
+          alt="Los Roques, Venezuela" loading="lazy"/>
+        <div class="pkg-body">
+          <div class="pkg-label">🌊 Playa & Sol</div>
+          <div class="pkg-title">Los Roques, Venezuela</div>
+          <ul class="pkg-features">
+            <li>Vuelo ida y vuelta incluido</li>
+            <li>Posada incluida</li>
+            <li>Traslados aeropuerto/posada</li>
+            <li>Desayuno diario</li>
+            <li>Paseos en bote</li>
+          </ul>
+          <a href="#contacto" class="pkg-btn">Solicitar cotización →</a>
+        </div>
+      </div>
+
+      <!-- MADRID -->
+      <div class="package-card reveal">
+        <img class="pkg-img"
+          src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=700&q=80"
+          alt="Madrid, España" loading="lazy"/>
+        <div class="pkg-body">
+          <div class="pkg-label">🏰 Historia & Cultura</div>
+          <div class="pkg-title">Madrid, España</div>
+          <ul class="pkg-features">
+            <li>Vuelo internacional incluido</li>
+            <li>Hospedaje incluido</li>
+            <li>Bus turístico ilimitado</li>
+            <li>Seguro de viaje</li>
+            <li>Asesoría de visa incluida</li>
+          </ul>
+          <a href="#contacto" class="pkg-btn">Solicitar cotización →</a>
+        </div>
+      </div>
+
+      <!-- CANAIMA -->
+      <div class="package-card reveal">
+        <img class="pkg-img"
+          src="https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=700&q=80"
+          alt="Salto Ángel, Canaima" loading="lazy"/>
+        <div class="pkg-body">
+          <div class="pkg-label">🏞️ Naturaleza & Aventura</div>
+          <div class="pkg-title">Canaima, Venezuela</div>
+          <ul class="pkg-features">
+            <li>Vuelo ida y vuelta incluido</li>
+            <li>Posada incluida</li>
+            <li>Traslados internos</li>
+            <li>Guía especializado</li>
+            <li>Paseo al Salto Ángel</li>
+          </ul>
+          <a href="#contacto" class="pkg-btn">Solicitar cotización →</a>
+        </div>
+      </div>
+
+      <!-- MACHU PICCHU -->
+      <div class="package-card reveal">
+        <img class="pkg-img"
+          src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=700&q=80"
+          alt="Machu Picchu, Perú" loading="lazy"/>
+        <div class="pkg-body">
+          <div class="pkg-label">🏔️ Viaje Ancestral</div>
+          <div class="pkg-title">Machu Picchu, Perú</div>
+          <ul class="pkg-features">
+            <li>Vuelo internacional incluido</li>
+            <li>Alojamiento incluido</li>
+            <li>Traslados privados</li>
+            <li>Paseos guiados</li>
+            <li>Seguro de viaje premium</li>
+          </ul>
+          <a href="#contacto" class="pkg-btn">Solicitar cotización →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ALIADOS + RIF ══ -->
+<div class="aliados-strip">
+  <div class="inner">
+    <div class="aliados-label">Aliados Comerciales de Confianza</div>
+    <div class="strip-pills">
+      <div class="aliado-pill"><span>🤝</span> Grupo Maso</div>
+      <div class="aliado-pill"><span>🤝</span> Viajes Viramundo</div>
+    </div>
+    <div class="rif-text">Eros Viajes y Turismo, C.A. &nbsp;·&nbsp; <strong>RIF J-40108156-8</strong></div>
+  </div>
+</div>
+
+<!-- ══ CONTACTO ══ -->
+<section id="contacto">
+  <div class="container">
+    <div class="contact-grid">
+
+      <div class="reveal">
+        <span class="section-tag tag-red">📩 Contacto</span>
+        <h2 class="section-title" style="margin-top:.5rem;">Hablemos de tu<br><span>próximo viaje</span></h2>
+        <p class="section-sub">Nuestro equipo está listo para asesorarte y ayudarte a planificar la escapada perfecta a tu medida.</p>
+        <div class="contact-info-cards">
+          <div class="c-card">
+            <div class="c-icon red">📞</div>
+            <div>
+              <p>Teléfono / WhatsApp</p>
+              <a href="https://wa.me/584142092730" target="_blank">+58 414 209 2730</a>
+            </div>
+          </div>
+          <div class="c-card">
+            <div class="c-icon blue">✉️</div>
+            <div>
+              <p>Correo Electrónico</p>
+              <a href="mailto:erosviajes.info@gmail.com">erosviajes.info@gmail.com</a>
+            </div>
+          </div>
+          <div class="c-card">
+            <div class="c-icon gold">📍</div>
+            <div><p>Ubicación</p><strong>Venezuela</strong></div>
+          </div>
+          <div class="c-card">
+            <div class="c-icon red">🕐</div>
+            <div><p>Horario de Atención</p><strong>Lun – Vie: 8:00am – 5:00pm</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form class="contact-form" id="contactForm" onsubmit="return handleSubmit(event);">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" name="nombre" placeholder="Tu nombre completo" required/>
+            </div>
+            <div class="form-group">
+              <label>Teléfono / WhatsApp</label>
+              <input type="tel" name="telefono" placeholder="+58 ..."/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" placeholder="tu@correo.com" required/>
+          </div>
+          <div class="form-group">
+            <label>Servicio de interés</label>
+            <select name="servicio" required>
+              <option value="">Selecciona un servicio...</option>
+              <option>Boletos Aéreos Nacionales</option>
+              <option>Boletos Aéreos Internacionales</option>
+              <option>Estadías / Hoteles</option>
+              <option>Traslados</option>
+              <option>Los Roques, Venezuela</option>
+              <option>Madrid, España</option>
+              <option>Canaima, Venezuela</option>
+              <option>Machu Picchu, Perú</option>
+              <option>Otro destino</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mensaje</label>
+            <textarea name="mensaje" placeholder="Cuéntanos sobre tu viaje soñado: destino, fechas, número de personas..." required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Enviar consulta ✈️</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">
+    <img src="https://via.placeholder.com/150x72/1A1A1A/F0A500?text=EROS" alt="Eros Viajes y Turismo, C.A." />
+  </div>
+  <p class="slogan">"Viajar es disfrutar..."</p>
+  <p class="footer-aliados">Aliados comerciales: Grupo Maso &nbsp;·&nbsp; Viajes Viramundo</p>
+  <p class="footer-email">
+    <a href="mailto:erosviajes.info@gmail.com">erosviajes.info@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://wa.me/584142092730" target="_blank" style="color:rgba(255,255,255,.48);text-decoration:none;">+58 414 209 2730</a>
+  </p>
+  <p class="copy">© 2025 Eros Viajes y Turismo, C.A. &nbsp;·&nbsp; RIF J-40108156-8 &nbsp;·&nbsp; Todos los derechos reservados.</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURACIÓN DEL FORMULARIO
+// ═══════════════════════════════════════════════════════════════
+
+// ⚠️ IMPORTANTE: Pega aquí la URL que obtuviste de Google Apps Script
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjEMBqZ1vvUQEc5SxOqxylvQyKVjhjj-97ueYQGXWN1vF48WlaMzVxi19G8HhNZPuA/exec';
+
+// ═══════════════════════════════════════════════════════════════
+// ANIMACIONES SCROLL REVEAL
+// ═══════════════════════════════════════════════════════════════
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 90);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ═══════════════════════════════════════════════════════════════
+// FUNCIÓN PARA ENVIAR FORMULARIO A GOOGLE SHEETS
+// ═══════════════════════════════════════════════════════════════
+function handleSubmit(e) {
+  e.preventDefault();
+  
+  const form = document.getElementById('contactForm');
+  const btn = form.querySelector('.form-submit');
+  const origText = btn.textContent;
+  
+  // Obtener valores del formulario
+  const formData = new FormData(form);
+  const nombre = formData.get('nombre');
+  const telefono = formData.get('telefono') || '';
+  const email = formData.get('email');
+  const servicio = formData.get('servicio');
+  const mensaje = formData.get('mensaje');
+  
+  // Validar campos obligatorios
+  if (!nombre || !email || !servicio || !mensaje) {
+    alert('Por favor completa todos los campos obligatorios');
+    return false;
+  }
+  
+  // Mostrar estado de envío
+  btn.textContent = '⏳ Enviando...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  
+  // Construir URL con parámetros
+  const params = new URLSearchParams({
+    nombre: nombre,
+    telefono: telefono,
+    email: email,
+    servicio: servicio,
+    mensaje: mensaje
+  });
+  
+  // Enviar datos a Google Sheets
+  fetch(SCRIPT_URL + '?' + params.toString(), {
+    method: 'GET',
+    mode: 'cors'
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      btn.textContent = '✅ ¡Mensaje enviado con éxito!';
+      btn.style.background = '#1A7A40';
+      form.reset();
+    } else {
+      throw new Error(result.error || 'Error desconocido');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    btn.textContent = '❌ Error. Intenta por WhatsApp';
+    btn.style.background = '#25D366';
+    btn.style.cursor = 'pointer';
+    
+    // Al hacer clic, abrir WhatsApp
+    btn.onclick = function() {
+      const wpMsg = `Hola, soy ${nombre}. Me interesa: ${servicio}. ${mensaje}`;
+      window.open('https://wa.me/584142092730?text=' + encodeURIComponent(wpMsg), '_blank');
+    };
+  })
+  .finally(() => {
+    // Restaurar botón después de 5 segundos
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.style.background = '';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.onclick = null;
+    }, 5000);
+  });
+  
+  return false;
+}
+</script>
+</body>
+</html>

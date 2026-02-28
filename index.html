@@ -65,15 +65,29 @@
   text-align: right;  /* Alinea el texto a la derecha para que quede pegado al logo */
   line-height: 1.3;
 }
+.nav-brand {
+  display: flex;       /* Pone logo y texto en fila horizontal */
+  align-items: center; /* Centra verticalmente logo y texto */
+  gap: 0.5rem;         /* Espacio pequeño entre logo y texto */
+}
+
+.nav-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+  text-align: left;    /* Alinea el texto a la izquierda */
+}
+
 .nav-info span {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--dark);
 }
+
 .nav-info small {
-  font-size: 0.7rem;  /* Tamaño más pequeño para el RIF */
-  color: var(--mid);  /* Color gris */
-  letter-spacing: 0.02em;
+  font-size: 0.7rem;
+  color: var(--mid);
+
 }
     /* ══ HERO ══ */
     #inicio {
@@ -391,13 +405,15 @@
 
 <!-- ══ NAVBAR ══ -->
 <nav>
+    <div class="nav-brand">
     <a href="#inicio" class="nav-logo">
-    <img src="eros_logo_Blanco_NEW.png" alt="Eros Viajes y Turismo, C.A." />
+      <img src="eros_logo_Blanco_NEW.png" alt="Eros Viajes y Turismo, C.A." />
     </a>
     <div class="nav-info">
-    <span>Viajes y turismo, C.A.</span>
-    <small>RIF J-40108156-8</small>
+      <span>Viajes y turismo, C.A.</span>
+      <small>RIF J-40108156-8</small>
     </div>
+  </div>
 
   <ul class="nav-links">
     <li><a href="#inicio">Inicio</a></li>
@@ -821,6 +837,7 @@ function handleSubmit(e) {
 </body>
 
 </html>
+
 
 
 

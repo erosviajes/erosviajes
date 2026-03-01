@@ -898,7 +898,63 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 // ═══════════════════════════════════════════════════════════════
 // FUNCIÓN PARA ENVIAR FORMULARIO A GOOGLE SHEETS
 // ═══════════════════════════════════════════════════════════════
-function handleSubmit(e) {
+  // ═══════════════════════════════════════════════════════════════
+// AUTO-GUARDADO DEL FORMULARIO (Local Storage)
+// ═══════════════════════════════════════════════════════════════
+
+const form = document.getElementById('contactForm');
+const formFields = ['nombre', 'telefono', 'email', 'servicio', 'mensaje'];
+
+// 1. Cargar datos guardados al iniciar la página
+window.addEventListener('DOMContentLoaded', () => {
+  const savedData = localStorage.getItem('eros_form_data');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    formFields.forEach(field => {
+      const input = form.elements[field];
+      if (input && data[field]) {
+        input.value = data[field];
+      }
+    });
+  }
+});
+
+// 2. Guardar datos automáticamente mientras el usuario escribe
+form.addEventListener('input', () => {
+  const data = {};
+  formFields.forEach(field => {
+    const input = form.elements[field];
+    if (input) {
+      data[field] = input.value;
+    }
+  });
+  localStorage.setItem('eros_form_data', JSON.stringify(data));
+});
+
+
+  // Obtener valores del formulario
+  const formData = new FormData(form);
+  const nombre = formData.get('nombre');
+  const telefono = formData.get('telefono') || '';
+  const email = formData.get('email');
+  const servicio = formData.get('servicio');
+  const mensaje = formData.get('mensaje');
+  
+  // CAPTURAR VALOR DE LAS CASILLAS
+  const politica = document.getElementById('politica').checked ? 'Sí aceptó política' : 'No aceptó';
+  const promociones = document.getElementById('promociones').checked ? 'Sí desea promociones' : 'No desea promociones';
+
+  // Construir URL con parámetros
+  const params = new URLSearchParams({
+    nombre: nombre,
+    telefono: telefono,
+    email: email,
+    servicio: servicio,
+    mensaje: mensaje,
+    politica: politica,        
+    promociones: promociones  
+  });
+  function handleSubmit(e) {
   e.preventDefault();
   
   const form = document.getElementById('contactForm');
@@ -949,6 +1005,7 @@ function handleSubmit(e) {
       btn.textContent = '✅ ¡Mensaje enviado con éxito!';
       btn.style.background = '#1A7A40';
       form.reset();
+      localStorage.removeItem('eros_form_data');
     } else {
       throw new Error(result.error || 'Error desconocido');
     }
@@ -982,6 +1039,7 @@ function handleSubmit(e) {
 </body>
 
 </html>
+
 
 
 

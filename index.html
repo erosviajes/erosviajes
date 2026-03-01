@@ -875,11 +875,12 @@
 </footer>
 
 <script>
+<script>
 // ═══════════════════════════════════════════════════════════════
-// CONFIGURACIÓN DEL FORMULARIO
+// CONFIGURACIÓN
 // ═══════════════════════════════════════════════════════════════
 
-// ⚠️ IMPORTANTE: Pega aquí la URL que obtuviste de Google Apps Script
+// ⚠️ PEGA AQUÍ TU URL DE GOOGLE SCRIPT (La nueva implementación)
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyz7c6R9G8nc0wH9JEDWum0-msGfgvTmww-G_p3DGDMWAOvzhquNne1my4Ce_GYvWuZ/exec';
 
 // ═══════════════════════════════════════════════════════════════
@@ -896,16 +897,11 @@ const obs = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 // ═══════════════════════════════════════════════════════════════
-// FUNCIÓN PARA ENVIAR FORMULARIO A GOOGLE SHEETS
+// AUTO-GUARDADO DEL FORMULARIO
 // ═══════════════════════════════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════
-// AUTO-GUARDADO DEL FORMULARIO (Local Storage)
-// ═══════════════════════════════════════════════════════════════
-
 const form = document.getElementById('contactForm');
 const formFields = ['nombre', 'telefono', 'email', 'servicio', 'mensaje'];
 
-// 1. Cargar datos guardados al iniciar la página
 window.addEventListener('DOMContentLoaded', () => {
   const savedData = localStorage.getItem('eros_form_data');
   if (savedData) {
@@ -919,7 +915,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// 2. Guardar datos automáticamente mientras el usuario escribe
 form.addEventListener('input', () => {
   const data = {};
   formFields.forEach(field => {
@@ -931,38 +926,30 @@ form.addEventListener('input', () => {
   localStorage.setItem('eros_form_data', JSON.stringify(data));
 });
 
+// ═══════════════════════════════════════════════════════════════
+// FORZAR SCROLL AL CONTACTO
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('load', function() {
+  if (window.location.hash === '#contacto') {
+    setTimeout(function() {
+      const contacto = document.getElementById('contacto');
+      if (contacto) {
+        contacto.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  }
+});
 
-  // Obtener valores del formulario
-  const formData = new FormData(form);
-  const nombre = formData.get('nombre');
-  const telefono = formData.get('telefono') || '';
-  const email = formData.get('email');
-  const servicio = formData.get('servicio');
-  const mensaje = formData.get('mensaje');
-  
-  // CAPTURAR VALOR DE LAS CASILLAS
-  const politica = document.getElementById('politica').checked ? 'Sí aceptó política' : 'No aceptó';
-  const promociones = document.getElementById('promociones').checked ? 'Sí desea promociones' : 'No desea promociones';
-
-  // Construir URL con parámetros
-  const params = new URLSearchParams({
-    nombre: nombre,
-    telefono: telefono,
-    email: email,
-    servicio: servicio,
-    mensaje: mensaje,
-    politica: politica,        
-    promociones: promociones  
-  });
-  
-  function handleSubmit(e) {
+// ═══════════════════════════════════════════════════════════════
+// FUNCIÓN PARA ENVIAR FORMULARIO
+// ═══════════════════════════════════════════════════════════════
+function handleSubmit(e) {
   e.preventDefault();
   
-  const form = document.getElementById('contactForm');
   const btn = form.querySelector('.form-submit');
   const origText = btn.textContent;
   
-  // 1. Obtener valores de los campos de texto
+  // Obtener valores
   const formData = new FormData(form);
   const nombre = formData.get('nombre');
   const telefono = formData.get('telefono') || '';
@@ -970,158 +957,30 @@ form.addEventListener('input', () => {
   const servicio = formData.get('servicio');
   const mensaje = formData.get('mensaje');
   
-  // 2. Obtener valores de las casillas (checkbox) directamente por ID
-  // Si está marcado (true), envía "Sí", si no, envía "No"
+  // Obtener casillas
   const checkPolitica = document.getElementById('politica');
   const checkPromociones = document.getElementById('promociones');
   
   const politica = checkPolitica.checked ? 'Sí aceptó política' : 'No aceptó';
   const promociones = checkPromociones.checked ? 'Sí desea promociones' : 'No desea promociones';
   
-  // 3. Validar campos obligatorios
+  // Validar
   if (!nombre || !email || !servicio || !mensaje) {
     alert('Por favor completa todos los campos obligatorios');
     return false;
   }
   
-  // Validar que acepte la política (obligatorio)
   if (!checkPolitica.checked) {
     alert('Debes aceptar la Política de Privacidad para continuar.');
     return false;
   }
   
-  // 4. Mostrar estado de envío
-  btn.textContent = '⏳ Enviando...';
-  btn.disabled = true;
-  btn.style.opacity = '0.7';
-  
-  // 5. Construir URL con parámetros (incluyendo las nuevas casillas)
-  const params = new URLSearchParams();
-  params.append('nombre', nombre);
-  params.append('telefono', telefono);
-  params.append('email', email);
-  params.append('servicio', servicio);
-  params.append('mensaje', mensaje);
-  params.append('politica', politica);       // 👈 CAMPOS NUEVOS
-  params.append('promociones', promociones); // 👈 CAMPOS NUEVOS
-  
-  // 6. Enviar datos a Google Sheets
-  fetch(SCRIPT_URL + '?' + params.toString(), {
-    method: 'GET',
-    mode: 'cors'
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      btn.textContent = '✅ ¡Mensaje enviado con éxito!';
-      btn.style.background = '#1A7A40';
-      form.reset();
-      localStorage.removeItem('eros_form_data'); // Limpiar borrador
-    } else {
-      throw new Error(result.error || 'Error desconocido');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    btn.textContent = '❌ Error. Intenta por WhatsApp';
-    btn.style.background = '#25D366';
-    btn.style.cursor = 'pointer';
-    
-    btn.onclick = function() {
-      const wpMsg = `Hola, soy ${nombre}. Me interesa: ${servicio}. ${mensaje}`;
-      window.open('https://wa.me/584142092730?text=' + encodeURIComponent(wpMsg), '_blank');
-    };
-  })
-  .finally(() => {
-    setTimeout(() => {
-      btn.textContent = origText;
-      btn.style.background = '';
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      btn.onclick = null;
-    }, 5000);
-  });
-  
-  return false;
-}
-
-  
-  // Mostrar estado de envío
-  btn.textContent = '⏳ Enviando...';
-  btn.disabled = true;
-  btn.style.opacity = '0.7';
-  
-  // Construir URL con parámetros
-  const params = new URLSearchParams({
-    nombre: nombre,
-    telefono: telefono,
-    email: email,
-    servicio: servicio,
-    mensaje: mensaje,
-    politica: politica,        
-    promociones: promociones
-  });
-  
-  // Enviar datos a Google Sheets
-  fetch(SCRIPT_URL + '?' + params.toString(), {
-    method: 'GET',
-    mode: 'cors'
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      btn.textContent = '✅ ¡Mensaje enviado con éxito!';
-      btn.style.background = '#1A7A40';
-      form.reset();
-      localStorage.removeItem('eros_form_data');
-    } else {
-      throw new Error(result.error || 'Error desconocido');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    btn.textContent = '❌ Error. Intenta por WhatsApp';
-    btn.style.background = '#25D366';
-    btn.style.cursor = 'pointer';
-    
-    // Al hacer clic, abrir WhatsApp
-    btn.onclick = function() {
-      const wpMsg = `Hola, soy ${nombre}. Me interesa: ${servicio}. ${mensaje}`;
-      window.open('https://wa.me/584142092730?text=' + encodeURIComponent(wpMsg), '_blank');
-    };
-  })
-  .finally(() => {
-    // Restaurar botón después de 5 segundos
-    setTimeout(() => {
-      btn.textContent = origText;
-      btn.style.background = '';
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      btn.onclick = null;
-    }, 5000);
-  });
-  
-  return false;
-}
-  // ═══════════════════════════════════════════════════════════════
-// FORZAR SCROLL AL CONTACTO SI VIENE DE OTRA PÁGINA
-// ═══════════════════════════════════════════════════════════════
-window.addEventListener('load', function() {
-  // Verifica si la URL tiene #contacto al final
-  if (window.location.hash === '#contacto') {
-    // Espera un pequeño momento para asegurar que todo cargó
-    setTimeout(function() {
-      const contacto = document.getElementById('contacto');
-      if (contacto) {
-        contacto.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100); // 100 milisegundos de espera
-  }
-});
+  // Estado
 </script>
 </body>
 
 </html>
+
 
 
 

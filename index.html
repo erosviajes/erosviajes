@@ -1035,10 +1035,26 @@ form.addEventListener('input', () => {
   
   return false;
 }
+  // ═══════════════════════════════════════════════════════════════
+// FORZAR SCROLL AL CONTACTO SI VIENE DE OTRA PÁGINA
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('load', function() {
+  // Verifica si la URL tiene #contacto al final
+  if (window.location.hash === '#contacto') {
+    // Espera un pequeño momento para asegurar que todo cargó
+    setTimeout(function() {
+      const contacto = document.getElementById('contacto');
+      if (contacto) {
+        contacto.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100); // 100 milisegundos de espera
+  }
+});
 </script>
 </body>
 
 </html>
+
 
 
 

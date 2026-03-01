@@ -880,7 +880,7 @@
 // CONFIGURACIÓN
 // ═══════════════════════════════════════════════════════════════
 
-// ⚠️ PEGA AQUÍ TU URL DE GOOGLE SCRIPT (La nueva implementación)
+// ⚠️ ASEGÚRATE DE QUE ESTA SEA TU URL REAL DE GOOGLE SCRIPT
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyz7c6R9G8nc0wH9JEDWum0-msGfgvTmww-G_p3DGDMWAOvzhquNne1my4Ce_GYvWuZ/exec';
 
 // ═══════════════════════════════════════════════════════════════
@@ -975,11 +975,66 @@ function handleSubmit(e) {
     return false;
   }
   
-  // Estado
+  // Estado de envío
+  btn.textContent = '⏳ Enviando...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  
+  // Construir parámetros
+  const params = new URLSearchParams();
+  params.append('nombre', nombre);
+  params.append('telefono', telefono);
+  params.append('email', email);
+  params.append('servicio', servicio);
+  params.append('mensaje', mensaje);
+  params.append('politica', politica);
+  params.append('promociones', promociones);
+  
+  // Enviar
+  fetch(SCRIPT_URL + '?' + params.toString(), {
+    method: 'GET',
+    mode: 'cors'
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      btn.textContent = '✅ ¡Mensaje enviado con éxito!';
+      btn.style.background = '#1A7A40';
+      form.reset();
+      localStorage.removeItem('eros_form_data');
+    } else {
+      throw new Error(result.error || 'Error desconocido');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    btn.textContent = '❌ Error. Intenta por WhatsApp';
+    btn.style.background = '#25D366';
+    btn.style.cursor = 'pointer';
+    
+    btn.onclick = function() {
+      const wpMsg = `Hola, soy ${nombre}. Me interesa: ${servicio}. ${mensaje}`;
+      window.open('https://wa.me/584142092730?text=' + encodeURIComponent(wpMsg), '_blank');
+    };
+  })
+  .finally(() => {
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.style.background = '';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.onclick = null;
+    }, 5000);
+  });
+  
+  return false;
+}
 </script>
+
 </body>
 
 </html>
+
 
 
 

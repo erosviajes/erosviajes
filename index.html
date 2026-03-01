@@ -954,6 +954,7 @@ form.addEventListener('input', () => {
     politica: politica,        
     promociones: promociones  
   });
+  
   function handleSubmit(e) {
   e.preventDefault();
   
@@ -961,22 +962,89 @@ form.addEventListener('input', () => {
   const btn = form.querySelector('.form-submit');
   const origText = btn.textContent;
   
-  // Obtener valores del formulario
+  // 1. Obtener valores de los campos de texto
   const formData = new FormData(form);
   const nombre = formData.get('nombre');
   const telefono = formData.get('telefono') || '';
   const email = formData.get('email');
   const servicio = formData.get('servicio');
   const mensaje = formData.get('mensaje');
-  // CAPTURAR VALOR DE LAS CASILLAS
-  const politica = document.getElementById('politica').checked ? 'Sí aceptó política' : 'No aceptó';
-  const promociones = document.getElementById('promociones').checked ? 'Sí desea promociones' : 'No desea promociones';
   
-  // Validar campos obligatorios
+  // 2. Obtener valores de las casillas (checkbox) directamente por ID
+  // Si está marcado (true), envía "Sí", si no, envía "No"
+  const checkPolitica = document.getElementById('politica');
+  const checkPromociones = document.getElementById('promociones');
+  
+  const politica = checkPolitica.checked ? 'Sí aceptó política' : 'No aceptó';
+  const promociones = checkPromociones.checked ? 'Sí desea promociones' : 'No desea promociones';
+  
+  // 3. Validar campos obligatorios
   if (!nombre || !email || !servicio || !mensaje) {
     alert('Por favor completa todos los campos obligatorios');
     return false;
   }
+  
+  // Validar que acepte la política (obligatorio)
+  if (!checkPolitica.checked) {
+    alert('Debes aceptar la Política de Privacidad para continuar.');
+    return false;
+  }
+  
+  // 4. Mostrar estado de envío
+  btn.textContent = '⏳ Enviando...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  
+  // 5. Construir URL con parámetros (incluyendo las nuevas casillas)
+  const params = new URLSearchParams();
+  params.append('nombre', nombre);
+  params.append('telefono', telefono);
+  params.append('email', email);
+  params.append('servicio', servicio);
+  params.append('mensaje', mensaje);
+  params.append('politica', politica);       // 👈 CAMPOS NUEVOS
+  params.append('promociones', promociones); // 👈 CAMPOS NUEVOS
+  
+  // 6. Enviar datos a Google Sheets
+  fetch(SCRIPT_URL + '?' + params.toString(), {
+    method: 'GET',
+    mode: 'cors'
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      btn.textContent = '✅ ¡Mensaje enviado con éxito!';
+      btn.style.background = '#1A7A40';
+      form.reset();
+      localStorage.removeItem('eros_form_data'); // Limpiar borrador
+    } else {
+      throw new Error(result.error || 'Error desconocido');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    btn.textContent = '❌ Error. Intenta por WhatsApp';
+    btn.style.background = '#25D366';
+    btn.style.cursor = 'pointer';
+    
+    btn.onclick = function() {
+      const wpMsg = `Hola, soy ${nombre}. Me interesa: ${servicio}. ${mensaje}`;
+      window.open('https://wa.me/584142092730?text=' + encodeURIComponent(wpMsg), '_blank');
+    };
+  })
+  .finally(() => {
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.style.background = '';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.onclick = null;
+    }, 5000);
+  });
+  
+  return false;
+}
+
   
   // Mostrar estado de envío
   btn.textContent = '⏳ Enviando...';
@@ -1054,6 +1122,7 @@ window.addEventListener('load', function() {
 </body>
 
 </html>
+
 
 
 

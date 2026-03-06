@@ -319,7 +319,8 @@
       background:var(--light);
       border-top:1px solid rgba(0,0,0,.07);
       border-bottom:1px solid rgba(0,0,0,.07);
-      padding:1.6rem 2rem; text-align:center;
+      padding:1.6rem 2rem;
+      text-align:center;
     }
     .aliados-strip .inner {
       max-width:900px; margin:0 auto;
@@ -333,8 +334,25 @@
       border-radius:50px; padding:.42rem 1.2rem;
       font-size:.85rem; font-weight:600; color:var(--dark);
       box-shadow:0 2px 8px rgba(0,0,0,.05);
+      text-decoration: none;
+      transition: all 0.3s ease;
     }
-    .aliado-pill span { color:var(--blue); }
+    .aliado-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-color: var(--blue);
+    }
+    /* Estilos para logos de aliados */
+    .aliado-pill img {
+      height: 24px;
+      width: auto;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      transition: transform 0.2s ease;
+    }
+    .aliado-pill:hover img {
+      transform: scale(1.05);
+    }
     .rif-text { font-size:.78rem; color:var(--mid); }
     .rif-text strong { color:var(--dark); }
 
@@ -434,7 +452,33 @@
       filter:brightness(1.15); object-fit:contain;
     }
     footer .slogan { font-style:italic; font-size:.95rem; color:rgba(255,255,255,.4); margin-bottom:.7rem; }
-    footer .footer-aliados { font-size:.8rem; color:rgba(255,255,255,.3); margin-bottom:.4rem; }
+    
+    /* Estilos para logos de aliados en Footer */
+    footer .aliado-footer-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    footer .aliado-pill {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+    }
+    footer .aliado-pill img {
+      height: 18px;
+      mix-blend-mode: screen;
+      filter: brightness(0.8);
+    }
+    footer .aliado-pill span {
+      color: rgba(255,255,255,0.7);
+    }
+    footer .aliado-pill:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
     footer .footer-email a { color:rgba(255,255,255,.48); text-decoration:none; font-size:.82rem; }
     footer .footer-email a:hover { color:var(--gold); }
     footer .copy { font-size:.76rem; margin-top:.8rem; border-top:1px solid rgba(255,255,255,.08); padding-top:.8rem; }
@@ -605,7 +649,6 @@
           </div>
         </div>
 
-        <!-- Bloque especial de calculadora -->
         <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-left: 5px solid var(--gold);">
             <p style="font-size: 0.9rem; color: var(--dark); margin-bottom: 1rem; line-height: 1.6;">
               💡 <strong>¿Cuánto cuesta?</strong><br>
@@ -781,8 +824,16 @@
   <div class="inner">
     <div class="aliados-label">Aliados Comerciales de Confianza</div>
     <div class="strip-pills">
-      <div class="aliado-pill"><span>🤝</span> Grupo Maso</div>
-      <div class="aliado-pill"><span>🤝</span> Viajes Viramundo</div>
+      <!-- GRUPO MASO -->
+      <a href="https://grupomaso.com.ve/" target="_blank" class="aliado-pill">
+        <img src="maso.png" alt="Grupo Maso">
+        <span>Grupo Maso</span>
+      </a>
+      <!-- VIAJES VIRAMUNDO -->
+      <a href="https://viajesviramundo.com/" target="_blank" class="aliado-pill">
+        <img src="viramundo.png" alt="Viajes Viramundo">
+        <span>Viajes Viramundo</span>
+      </a>
     </div>
     <div class="rif-text">Eros Viajes y Turismo, C.A. &nbsp;·&nbsp; <strong>RIF J-40108156-8</strong></div>
   </div>
@@ -887,7 +938,19 @@
     <img src="eros_logo_oval.png" alt="Eros Viajes y Turismo, C.A." />
   </div>
   <p class="slogan">"Viajar es disfrutar..."</p>
-  <p class="footer-aliados">Aliados comerciales: Grupo Maso &nbsp;·&nbsp; Viajes Viramundo</p>
+  
+  <!-- Logos de Aliados en Footer -->
+  <div class="aliado-footer-container">
+    <a href="https://grupomaso.com.ve/" target="_blank" class="aliado-pill">
+      <img src="maso.png" alt="Grupo Maso">
+      <span>Grupo Maso</span>
+    </a>
+    <a href="https://viajesviramundo.com/" target="_blank" class="aliado-pill">
+      <img src="viramundo.png" alt="Viajes Viramundo">
+      <span>Viajes Viramundo</span>
+    </a>
+  </div>
+
   <p class="footer-email">
     <a href="mailto:erosviajes.info@gmail.com">erosviajes.info@gmail.com</a>
     &nbsp;·&nbsp;
@@ -946,32 +1009,17 @@ form.addEventListener('input', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// FORZAR SCROLL AL CONTACTO
-// ═══════════════════════════════════════════════════════════════
-window.addEventListener('load', function() {
-  if (window.location.hash === '#contacto') {
-    setTimeout(function() {
-      const contacto = document.getElementById('contacto');
-      if (contacto) {
-        contacto.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  }
-});
-
-// ═══════════════════════════════════════════════════════════════
 // FUNCIÓN PARA ENVIAR FORMULARIO
 // ═══════════════════════════════════════════════════════════════
 function handleSubmit(e) {
   e.preventDefault();
   
-  // 👇 DEFENSA ANTI-BOT (HONEYPOT)
+  // DEFENSA ANTI-BOT (HONEYPOT)
   const honeypot = document.getElementById('website');
   if (honeypot && honeypot.value) {
     console.log("Bot detectado y bloqueado.");
     return false; 
   }
-  // 👆 FIN DEFENSA
 
   const btn = form.querySelector('.form-submit');
   const origText = btn.textContent;

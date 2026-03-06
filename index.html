@@ -845,6 +845,9 @@
 
       <div class="reveal">
         <form class="contact-form" id="contactForm" onsubmit="return handleSubmit(event);">
+          
+        <input type="text" name="website" id="website" style="display:none;" tabindex="-1" autocomplete="off">
+  <!-- ... resto de tus campos ... -->
           <div class="form-row">
             <div class="form-group">
               <label>Nombre completo</label>
@@ -983,6 +986,32 @@ window.addEventListener('load', function() {
 // ═══════════════════════════════════════════════════════════════
 function handleSubmit(e) {
   e.preventDefault();
+  // 👇 DEFENSA ANTI-BOT (HONEYPOT)
+  const honeypot = document.getElementById('website');
+  if (honeypot.value) {
+    // Si el campo oculto tiene texto, es un bot. 
+    // Fingimos que se envió pero no hacemos nada.
+    console.log("Bot detectado.");
+    return false;
+  }
+  // 👆 FIN DEFENSA
+  
+  const btn = form.querySelector('.form-submit');
+  // ... resto de tu código actual ...
+
+
+function handleSubmit(e) {
+  e.preventDefault();
+  
+  // 👇 DEFENSA ANTI-BOT (HONEYPOT)
+  // Si el campo oculto tiene texto, es un bot. Detenemos todo.
+  const honeypot = document.getElementById('website');
+  if (honeypot && honeypot.value) {
+    console.log("Bot detectado y bloqueado.");
+    return false; 
+  }
+  // 👆 FIN DEFENSA
+
   
   const btn = form.querySelector('.form-submit');
   const origText = btn.textContent;
@@ -1072,6 +1101,7 @@ function handleSubmit(e) {
 </body>
 
 </html>
+
 
 
 
